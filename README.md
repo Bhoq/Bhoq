@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @Bhoq
-- 👀 I’m interested in ... Python, MS SQL, Cold Fusion, Tableau , Qlik Sense
-- 🌱 I’m currently learning ... Python ,Cold Fusion
+- 👀 I’m interested in ... Python, MS SQL, Python, Tableau , ThoughtSpot,  Alteryx,  Qlik Sense
+- 🌱 I’m currently learning ... Python
 - 💞️ I’m looking to collaborate on ...
 - 📫 How to reach me ...
 - 😄 Pronouns: ...Her

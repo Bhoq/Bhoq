@@ -1,0 +1,31 @@
+# Re-import libraries after code execution environment was reset
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Simulate data to match the SQL query output structure
+data = {
+    'client_id': ['C001', 'C002', 'C003', 'C004', 'C005'],
+    'total_orders': [12, 3, 8, 0, 1],
+    'avg_order_value': [950, 700, 1200, 450, 800],
+    'last_order_date': ['2025-04-20', '2025-03-15', '2025-04-01', '2024-12-10', '2025-01-05'],
+    'last_contact': ['2025-04-21', '2025-03-10', '2025-04-05', '2025-01-01', '2025-01-10'],
+    'recent_orders': [5, 0, 3, 0, 0],
+    'activity_status': ['Active', 'Dormant', 'Active', 'Dormant', 'Dormant'],
+    'retention_risk': ['Normal', 'High Risk', 'Normal', 'High Risk', 'High Risk']
+}
+
+df = pd.DataFrame(data)
+
+# Set up a categorical color palette
+palette = {"Normal": "green", "High Risk": "red"}
+
+# Create bar chart of average order value per client, colored by retention risk
+plt.figure(figsize=(10, 6))
+sns.barplot(data=df, x='client_id', y='avg_order_value', hue='retention_risk', palette=palette)
+plt.title("Client Avg Order Value and Retention Risk")
+plt.xlabel("Client ID")
+plt.ylabel("Average Order Value")
+plt.legend(title='Retention Risk')
+plt.tight_layout()
+plt.show()

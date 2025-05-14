@@ -1,0 +1,74 @@
+At 3wr Entertainment, I led a strategic analytics initiative to reduce customer churn in our equipment rental business. Using Teradata SQL, I integrated order history, CRM activity, and engagement signals to develop a client retention risk model. I built a dynamic ThoughtSpot dashboard that flagged dormant or declining accounts and empowered the sales team to act quickly. This effort drove a $280K revenue recovery within six weeks and was later operationalized into Tableau for ongoing sales enablement. This project reflects how I combine data engineering, business intelligence, and cross-functional collaboration to deliver measurable business impact.
+I led a project to analyze client rental behavior using SQL and visualization tools. Key steps included:
+•	I wrote complex Teradata SQL queries to:
+o	Join order data with CRM and event history.
+o	Track frequency, value, and type of equipment rented over time.
+o	Identify "dormant" clients (no rentals in the past 90 days)
+o	Flag accounts for decreasing spending and engagement signals.
+•	I created a “Client Retention Risk Score” by combining:
+o	Rental frequency trend
+o	Drop in average order size.
+o	Lack of recent interaction with account reps
+•	I built a ThoughtSpot dashboard for the sales team to track high-risk accounts in real time.
+
+Strategic Impact:
+•	I supported sales reengagement campaigns targeting over 150 at-risk clients with personalized offers and outreach.
+•	This resulted in a $280K lift in rental revenue over 6 weeks from previously inactive clients.
+•	I established a new operational process by integrating the retention model into Tableau with weekly automated refreshes, improving sales visibility long-term.
+
+SQL Code for my personal project
+
+-- Step 1: Join order data with CRM and event history
+WITH combined_data AS (
+    SELECT 
+        o.client_id,
+        o.order_id,
+        o.order_date,
+        o.total_value,
+        e.event_type,
+        e.event_date,
+        c.last_contact_date
+    FROM orders o
+    LEFT JOIN crm_contacts c ON o.client_id = c.client_id
+    LEFT JOIN event_logs e ON o.client_id = e.client_id
+),
+
+-- Step 2: Aggregate metrics per client
+client_metrics AS (
+    SELECT 
+        client_id,
+        COUNT(DISTINCT order_id) AS total_orders,
+        AVG(total_value) AS avg_order_value,
+        MAX(order_date) AS last_order_date,
+        MAX(last_contact_date) AS last_contact,
+        COUNT(DISTINCT CASE WHEN order_date >= CURRENT_DATE - INTERVAL '90' DAY THEN order_id END) AS recent_orders
+    FROM combined_data
+    GROUP BY client_id
+),
+
+-- Step 3: Create client retention score and flag dormant accounts
+retention_scoring AS (
+    SELECT *,
+        CASE 
+            WHEN recent_orders = 0 THEN 'Dormant'
+            ELSE 'Active'
+        END AS activity_status,
+        CASE 
+            WHEN recent_orders = 0 AND avg_order_value < 1000 THEN 'High Risk'
+            ELSE 'Normal'
+        END AS retention_risk
+    FROM client_metrics
+)
+
+-- Final output: Clients with risk scores
+SELECT * FROM retention_scoring
+ORDER BY retention_risk DESC, avg_order_value;
+
+
+
+This SQL logic:
+•	Join orders with CRM touchpoints and event logs
+•	Flags inactive clients
+•	Calculates a retention risk level.
+•	Prioritizes accounts for re-engagement based on risk and order value.
+
